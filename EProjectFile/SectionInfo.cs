@@ -1,6 +1,6 @@
 namespace EProjectFile
 {
-	internal class SectionInfo
+	public class SectionInfo
 	{
 		public string Name;
 

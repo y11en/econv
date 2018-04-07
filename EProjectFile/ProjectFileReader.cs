@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EProjectFile
 {
-	internal class ProjectFileReader : IDisposable
+	public class ProjectFileReader : IDisposable
 	{
 		private BinaryReader reader;
 
