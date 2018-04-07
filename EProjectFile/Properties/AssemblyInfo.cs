@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("econv")]
+[assembly: AssemblyTitle("EProjectFile")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("econv")]
+[assembly: AssemblyProduct("EProjectFile")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("aa1e7dce-3d43-4d01-b5f4-4f7f4456ae14")]
+[assembly: Guid("f1f9d0e3-2f1d-4d3e-936a-2a3220533532")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 //      修订号
 //
 // 可以指定所有值，也可以使用以下所示的 "*" 预置版本号和修订号
-// 方法是按如下所示使用“*”: :
+//通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
