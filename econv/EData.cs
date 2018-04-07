@@ -12,5 +12,6 @@ namespace econv
         public ESystemInfo ESystemInfo;
         public ProjectConfigInfo ProjectConfigInfo;
         public ResourceSectionInfo ResourceSectionInfo;
+        public EPackageInfo EPackageInfo;
     }
 }

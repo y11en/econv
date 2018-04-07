@@ -48,6 +48,7 @@
     <Compile Include="EData.cs" />
     <Compile Include="EProjectFile\ConstantInfo.cs" />
     <Compile Include="EProjectFile\CryptECReadStream.cs" />
+    <Compile Include="EProjectFile\EPackageInfo.cs" />
     <Compile Include="EProjectFile\ESystemInfo.cs" />
     <Compile Include="EProjectFile\ExtensionMethod.cs" />
     <Compile Include="EProjectFile\FormControlInfo.cs" />

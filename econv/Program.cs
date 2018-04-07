@@ -69,6 +69,7 @@ namespace econv
                             }
                         case "易包信息段1":
                             {
+                                data.EPackageInfo = EPackageInfo.Parse(section.Data);
                                 break;
                             }
                         case "程序资源段":
