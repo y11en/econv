@@ -13,5 +13,6 @@ namespace econv
         public ProjectConfigInfo ProjectConfigInfo;
         public ResourceSectionInfo ResourceSectionInfo;
         public EPackageInfo EPackageInfo;
+        public List<SectionInfo> UnknownInfos;
     }
 }

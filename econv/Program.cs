@@ -47,7 +47,8 @@ namespace econv
             using (var project = new ProjectFileReader(File.OpenRead(path), password))
             {
                 var data = new EData();
- 
+                data.UnknownInfos = new List<SectionInfo>();
+
                 while (!project.IsFinish())
                 {
                     SectionInfo section = project.ReadSection();
@@ -79,6 +80,7 @@ namespace econv
                             }
                         default:
                             {
+                                data.UnknownInfos.Add(section);
                                 break;
                             }
                     }
