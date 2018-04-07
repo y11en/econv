@@ -15,9 +15,10 @@ namespace EProjectFile
 
 		public bool CryptEc => cryptEc;
 
-		public ProjectFileReader(Stream stream, string password)
+		public ProjectFileReader(string filename, string password)
 		{
-			reader = new BinaryReader(stream, Encoding.GetEncoding("gbk"));
+            var stream = File.OpenRead(filename);
+            reader = new BinaryReader(stream, Encoding.GetEncoding("gbk"));
 			int num = reader.ReadInt32();
 			int num2 = reader.ReadInt32();
 			if (num == 1162630231)
