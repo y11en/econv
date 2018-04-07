@@ -46,8 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EData.cs" />
+    <Compile Include="EProjectFile\ClassInfo.cs" />
+    <Compile Include="EProjectFile\CodeDataParser.cs" />
+    <Compile Include="EProjectFile\CodeSectionInfo.cs" />
     <Compile Include="EProjectFile\ConstantInfo.cs" />
     <Compile Include="EProjectFile\CryptECReadStream.cs" />
+    <Compile Include="EProjectFile\DllDeclareInfo.cs" />
     <Compile Include="EProjectFile\EPackageInfo.cs" />
     <Compile Include="EProjectFile\ESystemInfo.cs" />
     <Compile Include="EProjectFile\ExtensionMethod.cs" />
@@ -57,11 +61,15 @@
     <Compile Include="EProjectFile\FormMenuInfo.cs" />
     <Compile Include="EProjectFile\HexConverter.cs" />
     <Compile Include="EProjectFile\IHasId.cs" />
+    <Compile Include="EProjectFile\LibraryInfo.cs" />
+    <Compile Include="EProjectFile\MethodInfo.cs" />
     <Compile Include="EProjectFile\ProjectConfigInfo.cs" />
     <Compile Include="EProjectFile\ProjectFileReader.cs" />
     <Compile Include="EProjectFile\ResourceSectionInfo.cs" />
     <Compile Include="EProjectFile\SectionInfo.cs" />
+    <Compile Include="EProjectFile\StructInfo.cs" />
     <Compile Include="EProjectFile\ToJson.cs" />
+    <Compile Include="EProjectFile\VariableInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
