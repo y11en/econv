@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
+
 
 namespace EProjectFile
 {
 	internal static class CodeDataParser
 	{
-		public class Expression
+        public class Expression
 		{
 		}
 
@@ -283,7 +285,7 @@ namespace EProjectFile
 		public class SubPtrExpression : Expression
 		{
 			public int Id;
-            public CodeSectionInfo codeSectionInfo;
+            private CodeSectionInfo codeSectionInfo;
 
             public SubPtrExpression(int Id, CodeSectionInfo codeSectionInfo)
 			{
@@ -299,13 +301,19 @@ namespace EProjectFile
 
 		public class CallExpression : Expression
 		{
-			public short LibraryId;
+            [DllImport("elib.dll", CharSet = CharSet.Ansi)]
+            public static extern IntPtr GetECmd([MarshalAs(UnmanagedType.LPStr)] string lib, int id);
+
+            private delegate int FnGetNewInf();
+
+            public short LibraryId;
 
 			public int MethodId;
 
 			public Expression Target;
+            private CodeSectionInfo codeSectionInfo;
 
-			private ParamListExpression _ParamList = null;
+            private ParamListExpression _ParamList = null;
 
 			public ParamListExpression ParamList
 			{
@@ -319,20 +327,35 @@ namespace EProjectFile
 				}
 			}
 
-			public CallExpression(short LibraryId, int MethodId)
+			public CallExpression(short LibraryId, int MethodId, CodeSectionInfo codeSectionInfo)
 			{
 				this.LibraryId = LibraryId;
 				this.MethodId = MethodId;
-			}
+                this.codeSectionInfo = codeSectionInfo;
+            }
 
 			public override string ToString()
 			{
                 var target = Target == null ? "" : $"{Target}.";
-                var libid = LibraryId < 0 ? "Neg" + (-LibraryId).ToString() : LibraryId.ToString();
                 var paramlist = _ParamList == null ? "()" : _ParamList.ToString();
 
-                return target + "Sub_" + libid + $"_{MethodId}" + paramlist;
-			}
+                string name;
+                if (LibraryId < 0)
+                {
+                    name = $"Sub_Neg{-LibraryId}_{MethodId}";
+                }
+                else
+                {
+                    var pname = GetECmd(codeSectionInfo.Libraries[LibraryId].FileName + ".fne", MethodId);
+                    name = Marshal.PtrToStringAnsi(pname);
+                    if (name == null)
+                    {
+                        name = $"Sub_Neg{LibraryId}_{MethodId}";
+                    }
+                }
+
+                return $"{target}{name}{paramlist}";
+            }
 		}
 
 		public class ParamListExpression : Expression
@@ -853,7 +876,7 @@ namespace EProjectFile
 			{
 				comment = null;
 			}
-			CallExpression callExpression = new CallExpression(libraryId, methodId);
+			CallExpression callExpression = new CallExpression(libraryId, methodId, codeSectionInfo);
 			if (reader.BaseStream.Position != reader.BaseStream.Length)
 			{
 				switch (reader.ReadByte())
