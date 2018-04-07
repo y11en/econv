@@ -380,6 +380,36 @@ namespace EProjectFile
                     {
                         name = $"Sub_Neg{LibraryId}_{MethodId}";
                     }
+                    if (codeSectionInfo.Libraries[LibraryId].FileName == "krnln")
+                    {
+                        switch(name)
+                        {
+                            case "相乘": name = "*"; break;
+                            case "相除": name = "/"; break;
+                            case "整除": name = "//"; break;
+                            case "求余数": name = "%"; break;
+                            case "相加": name = "+"; break;
+                            case "相减": name = "-"; break;
+                            case "负": name = "-"; break;
+                            case "等于": name = "=="; break;
+                            case "不等于": name = "!="; break;
+                            case "小于": name = "<"; break;
+                            case "大于": name = ">"; break;
+                            case "小于等于": name = "<="; break;
+                            case "大于等于": name = ">="; break;
+                            case "近似等于": name = "?="; break;
+                            case "并且": name = "&&"; break;
+                            case "或者": name = "||"; break;
+                            case "位取反": name = "~"; break;
+                            case "位与": name = "&"; break;
+                            case "位或": name = "|"; break;
+                            case "位异或": name = "^"; break;
+                            case "左移": name = "<<"; break;
+                            case "右移": name = ">>"; break;
+                            case "赋值": name = "="; break;
+                            case "连续赋值": name = "="; break;
+                        }
+                    }
                 }
 
                 return $"{target}{name}{paramlist}";
