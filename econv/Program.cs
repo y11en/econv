@@ -60,6 +60,7 @@ namespace econv
                             }
                         case "用户信息段":
                             {
+                                data.ProjectConfigInfo = ProjectConfigInfo.Parse(section.Data);
                                 break;
                             }
                         case "程序段":

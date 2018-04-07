@@ -10,5 +10,6 @@ namespace econv
     class EData : ToJson
     {
         public ESystemInfo ESystemInfo;
+        public ProjectConfigInfo ProjectConfigInfo;
     }
 }
