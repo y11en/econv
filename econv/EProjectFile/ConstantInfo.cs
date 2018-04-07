@@ -120,7 +120,10 @@ namespace EProjectFile
 
 		public int Id => id;
 
-		public ConstantInfo(int id)
+        public uint Type;
+
+
+        public ConstantInfo(int id)
 		{
 			this.id = id;
 		}
@@ -136,11 +139,12 @@ namespace EProjectFile
 					Comment = reader.ReadCStyleString()
 				};
 				uint num = (uint)id >> 28;
+                constantInfo.Type = num;
 				if (num != 1)
-				{
+                {
 					if (num - 2 <= 1)
 					{
-						constantInfo.Value = reader.ReadBytesWithLengthPrefix();
+                        constantInfo.Value = reader.ReadBytesWithLengthPrefix();
 						goto IL_0107;
 					}
 					throw new Exception();
