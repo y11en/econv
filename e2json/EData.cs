@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EProjectFile;
 
-namespace econv
+namespace e2json
 {
     class EData : ToJson
     {

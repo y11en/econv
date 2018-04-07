@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using EProjectFile;
 
-namespace econv
+namespace e2json
 {
     class Program
     {
