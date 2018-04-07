@@ -31,7 +31,7 @@ namespace econv
 
             try
             {
-                Convert(path, password);
+                Console.Write(Convert(path, password));
             }
             catch (Exception ex)
             {
@@ -42,15 +42,46 @@ namespace econv
             return (int)ExitCode.Success;
         }
 
-        static void Convert(string path, string password)
+        static string Convert(string path, string password)
         {
             using (var project = new ProjectFileReader(File.OpenRead(path), password))
             {
+                var data = new EData();
+ 
                 while (!project.IsFinish())
                 {
                     SectionInfo section = project.ReadSection();
-                    Console.WriteLine(section.Name);
+                    switch (section.Name)
+                    {
+                        case "系统信息段":
+                            {
+                                data.ESystemInfo = ESystemInfo.Parse(section.Data);
+                                break;
+                            }
+                        case "用户信息段":
+                            {
+                                break;
+                            }
+                        case "程序段":
+                            {
+                                break;
+                            }
+                        case "易包信息段1":
+                            {
+                                break;
+                            }
+                        case "程序资源段":
+                            {
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
                 }
+
+                return data.ToString();
             }
         }
     }
