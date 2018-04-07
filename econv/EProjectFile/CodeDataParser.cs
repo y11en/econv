@@ -283,15 +283,17 @@ namespace EProjectFile
 		public class SubPtrExpression : Expression
 		{
 			public int Id;
+            public CodeSectionInfo codeSectionInfo;
 
-			public SubPtrExpression(int Id)
+            public SubPtrExpression(int Id, CodeSectionInfo codeSectionInfo)
 			{
 				this.Id = Id;
-			}
+                this.codeSectionInfo = codeSectionInfo;
+            }
 
 			public override string ToString()
 			{
-				return $"&Sub_Neg2_{Id}";
+                return Array.Find(codeSectionInfo.Methods, method => method.Id == Id).Name;
 			}
 		}
 
@@ -325,7 +327,11 @@ namespace EProjectFile
 
 			public override string ToString()
 			{
-				return ((Target == null) ? "" : $"{Target}.") + "Sub_" + ((LibraryId < 0) ? ("Neg" + (-LibraryId).ToString()) : LibraryId.ToString()) + $"_{MethodId}" + ((_ParamList == null) ? "()" : _ParamList.ToString());
+                var target = Target == null ? "" : $"{Target}.";
+                var libid = LibraryId < 0 ? "Neg" + (-LibraryId).ToString() : LibraryId.ToString();
+                var paramlist = _ParamList == null ? "()" : _ParamList.ToString();
+
+                return target + "Sub_" + libid + $"_{MethodId}" + paramlist;
 			}
 		}
 
@@ -497,7 +503,7 @@ namespace EProjectFile
 					string text;
 					string text2;
 					bool flag;
-					CallExpression callExpression = ParseCallExpressionWithoutType(reader, out text, out text2, out flag);
+					CallExpression callExpression = ParseCallExpressionWithoutType(reader, codeSectionInfo, out text, out text2, out flag);
 					switch (b)
 					{
 					case 109:
@@ -518,7 +524,7 @@ namespace EProjectFile
 									Comment = text2,
 									Mask = flag
 								});
-								condition = ParseCallExpressionWithoutType(reader, out text, out text2, out flag).ParamList.Value.ElementAtOrDefault(0);
+								condition = ParseCallExpressionWithoutType(reader, codeSectionInfo, out text, out text2, out flag).ParamList.Value.ElementAtOrDefault(0);
 								statementBlock2 = ParseStatementBlock(reader, codeSectionInfo);
 								continue;
 							case 111:
@@ -555,7 +561,7 @@ namespace EProjectFile
 						byte b2 = reader.ReadByte();
 						if (b2 == 113)
 						{
-							callExpression2 = ParseCallExpressionWithoutType(reader, out string unvalidCode, out string commentOnEnd, out bool maskOnEnd);
+							callExpression2 = ParseCallExpressionWithoutType(reader, codeSectionInfo, out string unvalidCode, out string commentOnEnd, out bool maskOnEnd);
 							if (callExpression.LibraryId != 0)
 							{
 								throw new Exception();
@@ -698,7 +704,7 @@ namespace EProjectFile
 			return statementBlock;
 		}
 
-		private static Expression ParseExpression(BinaryReader reader, bool parseMember = true)
+		private static Expression ParseExpression(BinaryReader reader, CodeSectionInfo codeSectionInfo, bool parseMember = true)
 		{
 			Expression expression = null;
 			byte b = reader.ReadByte();
@@ -736,10 +742,10 @@ namespace EProjectFile
 				expression = new VariableExpression(reader.ReadInt32());
 				break;
 			case 30:
-				expression = new SubPtrExpression(reader.ReadInt32());
+				expression = new SubPtrExpression(reader.ReadInt32(), codeSectionInfo);
 				break;
 			case 33:
-				expression = ParseCallExpressionWithoutType(reader);
+				expression = ParseCallExpressionWithoutType(reader, codeSectionInfo);
 				break;
 			case 35:
 				expression = new EmnuConstantExpression(reader.ReadInt32(), reader.ReadInt32());
@@ -748,7 +754,7 @@ namespace EProjectFile
 			{
 				ArrayLiteralExpression arrayLiteralExpression = new ArrayLiteralExpression();
 				Expression item;
-				while (!((item = ParseExpression(reader, true)) is ArrayLiteralEnd))
+				while (!((item = ParseExpression(reader, codeSectionInfo, true)) is ArrayLiteralEnd))
 				{
 					arrayLiteralExpression.Value.Add(item);
 				}
@@ -764,7 +770,7 @@ namespace EProjectFile
 				if (num == 83951614)
 				{
 					reader.ReadByte();
-					expression = ParseExpression(reader, true);
+					expression = ParseExpression(reader, codeSectionInfo, true);
 				}
 				else
 				{
@@ -804,7 +810,7 @@ namespace EProjectFile
 					IL_027a:
 					bool parseMember2 = reader.ReadByte() == 56;
 					reader.BaseStream.Position -= 1L;
-					expression = new AccessArrayExpression(expression, ParseExpression(reader, parseMember2));
+					expression = new AccessArrayExpression(expression, ParseExpression(reader, codeSectionInfo, parseMember2));
 				}
 			}
 			goto IL_02eb;
@@ -812,26 +818,26 @@ namespace EProjectFile
 			return expression;
 		}
 
-		private static ParamListExpression ParseParamList(BinaryReader reader)
+		private static ParamListExpression ParseParamList(BinaryReader reader, CodeSectionInfo codeSectionInfo)
 		{
 			ParamListExpression paramListExpression = new ParamListExpression();
 			Expression item;
-			while (!((item = ParseExpression(reader, true)) is ParamListEnd))
+			while (!((item = ParseExpression(reader, codeSectionInfo, true)) is ParamListEnd))
 			{
 				paramListExpression.Value.Add(item);
 			}
 			return paramListExpression;
 		}
 
-		private static CallExpression ParseCallExpressionWithoutType(BinaryReader reader)
+		private static CallExpression ParseCallExpressionWithoutType(BinaryReader reader, CodeSectionInfo codeSectionInfo)
 		{
 			string text;
 			string text2;
 			bool flag;
-			return ParseCallExpressionWithoutType(reader, out text, out text2, out flag);
+			return ParseCallExpressionWithoutType(reader, codeSectionInfo, out text, out text2, out flag);
 		}
 
-		private static CallExpression ParseCallExpressionWithoutType(BinaryReader reader, out string unvalidCode, out string comment, out bool mask)
+		private static CallExpression ParseCallExpressionWithoutType(BinaryReader reader, CodeSectionInfo codeSectionInfo, out string unvalidCode, out string comment, out bool mask)
 		{
 			int methodId = reader.ReadInt32();
 			short libraryId = reader.ReadInt16();
@@ -853,12 +859,12 @@ namespace EProjectFile
 				switch (reader.ReadByte())
 				{
 				case 54:
-					callExpression.ParamList = ParseParamList(reader);
+					callExpression.ParamList = ParseParamList(reader, codeSectionInfo);
 					break;
 				case 56:
 					reader.BaseStream.Position -= 1L;
-					callExpression.Target = ParseExpression(reader, true);
-					callExpression.ParamList = ParseParamList(reader);
+					callExpression.Target = ParseExpression(reader, codeSectionInfo, true);
+					callExpression.ParamList = ParseParamList(reader, codeSectionInfo);
 					break;
 				default:
 					reader.BaseStream.Position -= 1L;
