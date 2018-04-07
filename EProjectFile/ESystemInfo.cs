@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class ESystemInfo : ToJson
+	public class ESystemInfo
     {
 		public const string SectionName = "系统信息段";
 
