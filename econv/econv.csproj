@@ -46,12 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EData.cs" />
+    <Compile Include="EProjectFile\ConstantInfo.cs" />
     <Compile Include="EProjectFile\CryptECReadStream.cs" />
     <Compile Include="EProjectFile\ESystemInfo.cs" />
     <Compile Include="EProjectFile\ExtensionMethod.cs" />
+    <Compile Include="EProjectFile\FormControlInfo.cs" />
+    <Compile Include="EProjectFile\FormElementInfo.cs" />
+    <Compile Include="EProjectFile\FormInfo.cs" />
+    <Compile Include="EProjectFile\FormMenuInfo.cs" />
+    <Compile Include="EProjectFile\HexConverter.cs" />
     <Compile Include="EProjectFile\IHasId.cs" />
     <Compile Include="EProjectFile\ProjectConfigInfo.cs" />
     <Compile Include="EProjectFile\ProjectFileReader.cs" />
+    <Compile Include="EProjectFile\ResourceSectionInfo.cs" />
     <Compile Include="EProjectFile\SectionInfo.cs" />
     <Compile Include="EProjectFile\ToJson.cs" />
     <Compile Include="Program.cs" />

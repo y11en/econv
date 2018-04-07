@@ -73,6 +73,7 @@ namespace econv
                             }
                         case "程序资源段":
                             {
+                                data.ResourceSectionInfo = ResourceSectionInfo.Parse(section.Data);
                                 break;
                             }
                         default:
