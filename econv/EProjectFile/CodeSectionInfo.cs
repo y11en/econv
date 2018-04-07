@@ -95,7 +95,7 @@ namespace EProjectFile
             foreach (var method in codeSectionInfo.Methods)
             {
                 BinaryReader reader = new BinaryReader(new MemoryStream(method.CodeData[5], false));
-                CodeDataParser.StatementBlock statement = CodeDataParser.ParseStatementBlock(reader, null);
+                CodeDataParser.StatementBlock statement = CodeDataParser.ParseStatementBlock(reader, codeSectionInfo);
                 method.Code = statement.ToString();
             }
 			return codeSectionInfo;

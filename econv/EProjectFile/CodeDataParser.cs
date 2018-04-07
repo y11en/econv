@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EProjectFile
 {
-	public static class CodeDataParser
+	internal static class CodeDataParser
 	{
 		public class Expression
 		{
@@ -470,24 +470,14 @@ namespace EProjectFile
 			return c + x.Replace("\r\n", "\r\n" + c);
 		}
 
-		public static StatementBlock ParseStatementBlock(BinaryReader reader, BinaryWriter lineOffestWriter)
+		public static StatementBlock ParseStatementBlock(BinaryReader reader, CodeSectionInfo codeSectionInfo)
 		{
 			StatementBlock statementBlock = new StatementBlock();
 			while (reader.BaseStream.Position != reader.BaseStream.Length)
 			{
 				int num = (int)reader.BaseStream.Position;
 				byte b = reader.ReadByte();
-				if (lineOffestWriter != null && b != 80 && b != 81 && b != 82 && b != 85 && b != 84 && b != 83 && b != 111)
-				{
-					if (b == 109)
-					{
-						lineOffestWriter.Write(num + 1);
-					}
-					else
-					{
-						lineOffestWriter.Write(num);
-					}
-				}
+
 				switch (b)
 				{
 				case 80:
@@ -514,7 +504,7 @@ namespace EProjectFile
 					{
 						SwitchStatement switchStatement = new SwitchStatement();
 						Expression condition = callExpression.ParamList.Value.ElementAtOrDefault(0);
-						StatementBlock statementBlock2 = ParseStatementBlock(reader, lineOffestWriter);
+						StatementBlock statementBlock2 = ParseStatementBlock(reader, codeSectionInfo);
 						while (true)
 						{
 							switch (reader.ReadByte())
@@ -529,7 +519,7 @@ namespace EProjectFile
 									Mask = flag
 								});
 								condition = ParseCallExpressionWithoutType(reader, out text, out text2, out flag).ParamList.Value.ElementAtOrDefault(0);
-								statementBlock2 = ParseStatementBlock(reader, lineOffestWriter);
+								statementBlock2 = ParseStatementBlock(reader, codeSectionInfo);
 								continue;
 							case 111:
 								switchStatement.Case.Add(new SwitchStatement.CaseInfo
@@ -541,7 +531,7 @@ namespace EProjectFile
 									Mask = flag
 								});
 								condition = null;
-								statementBlock2 = ParseStatementBlock(reader, lineOffestWriter);
+								statementBlock2 = ParseStatementBlock(reader, codeSectionInfo);
 								continue;
 							case 84:
 								break;
@@ -559,7 +549,7 @@ namespace EProjectFile
 					}
 					case 112:
 					{
-						StatementBlock block = ParseStatementBlock(reader, lineOffestWriter);
+						StatementBlock block = ParseStatementBlock(reader, codeSectionInfo);
 						CallExpression callExpression2 = null;
 						int endOffest3 = (int)reader.BaseStream.Position;
 						byte b2 = reader.ReadByte();
@@ -629,7 +619,7 @@ namespace EProjectFile
 						{
 							Condition = callExpression.ParamList.Value.ElementAtOrDefault(0),
 							UnvalidCode = text,
-							Block = ParseStatementBlock(reader, lineOffestWriter),
+							Block = ParseStatementBlock(reader, codeSectionInfo),
 							Comment = text2,
 							Mask = flag
 						};
@@ -653,12 +643,12 @@ namespace EProjectFile
 							Comment = text2,
 							Mask = flag
 						};
-						ifElseStatement.BlockOnTrue = ParseStatementBlock(reader, lineOffestWriter);
+						ifElseStatement.BlockOnTrue = ParseStatementBlock(reader, codeSectionInfo);
 						if (reader.ReadByte() != 80)
 						{
 							throw new Exception();
 						}
-						ifElseStatement.BlockOnFalse = ParseStatementBlock(reader, lineOffestWriter);
+						ifElseStatement.BlockOnFalse = ParseStatementBlock(reader, codeSectionInfo);
 						if (reader.ReadByte() != 81)
 						{
 							throw new Exception();
