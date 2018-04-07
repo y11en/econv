@@ -25,10 +25,12 @@ namespace EProjectFile
 
 		public VariableInfo[] Parameters;
 
-		[JsonProperty]
+		[JsonIgnore]
 		public byte[][] CodeData;
 
 		public int Id => id;
+
+        public string Code;
 
 		public MethodInfo(int id)
 		{

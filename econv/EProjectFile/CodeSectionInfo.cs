@@ -91,6 +91,13 @@ namespace EProjectFile
 					codeSectionInfo.DllDeclares = DllDeclareInfo.ReadDllDeclares(binaryReader);
 				}
 			}
+
+            foreach (var method in codeSectionInfo.Methods)
+            {
+                BinaryReader reader = new BinaryReader(new MemoryStream(method.CodeData[5], false));
+                CodeDataParser.StatementBlock statement = CodeDataParser.ParseStatementBlock(reader, null);
+                method.Code = statement.ToString();
+            }
 			return codeSectionInfo;
 		}
 
