@@ -15,7 +15,7 @@ namespace EProjectFile
 
 		public int Flags;
 
-		public int ReturnDataType;
+		public uint ReturnDataType;
 
 		public string Name;
 
@@ -50,7 +50,7 @@ namespace EProjectFile
 				methodInfo.UnknownAfterId = array2[i];
 				methodInfo.Type = reader.ReadInt32();
 				methodInfo.Flags = reader.ReadInt32();
-				methodInfo.ReturnDataType = reader.ReadInt32();
+				methodInfo.ReturnDataType = reader.ReadUInt32();
 				methodInfo.Name = reader.ReadStringWithLengthPrefix();
 				methodInfo.Comment = reader.ReadStringWithLengthPrefix();
 				methodInfo.Variables = VariableInfo.ReadVariables(reader);

@@ -213,7 +213,7 @@ def gen_method(title, section, cls, methods):
             [title, '返回值类型', '公开', '易包', '备注'],
             [
                 '%s::%s'%(cls.Name,method.Name),
-                '',
+                get_variable_type(method.ReturnDataType),
                 check(method.Flags, 2),
                 epkg if epkg else '',
                 method.Comment
