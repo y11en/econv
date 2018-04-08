@@ -28,7 +28,8 @@ def load(filename, password):
             parsers = {
                 '系统信息段': ESystemInfo.Parse,
                 '用户信息段': ProjectConfigInfo.Parse,
-                '程序段': CodeSectionInfo.Parse
+                '程序段': CodeSectionInfo.Parse,
+                '易包信息段1': EPackageInfo.Parse,
             }
 
             sections = OrderedDict()
@@ -134,10 +135,16 @@ def tab(text, n):
 def gen_method(title, section, cls, methods):
     result = ''
     for idx in cls.Method:
-        method = methods[idx]
+        method, epkg = methods[idx]
         data = [
             [title, '返回值类型', '公开', '易包', '备注'],
-            ['%s::%s'%(cls.Name,method.Name), '', 'x' if method.Flags else '', '', method.Comment]
+            [
+                '%s::%s'%(cls.Name,method.Name),
+                '',
+                'x' if method.Flags else '',
+                epkg if epkg else '',
+                method.Comment
+            ]
         ]
         result += SingleTable(data).table + '\n'
         result += tab(method.Code, 2) + '\n'
@@ -147,7 +154,9 @@ def gen_method(title, section, cls, methods):
 
 def gen_class_variable(sections):
     section = sections['程序段']
-    methods = dict(map(lambda m: (m.Id,m), section.Methods))
+    epkgs = sections['易包信息段1'].FileNames
+
+    methods = dict(map(lambda (i,m): (m.Id, (m, epkgs[i])), enumerate(section.Methods)))
 
     result = ''
     for cls in section.Classes:

@@ -4,15 +4,17 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class EPackageInfo
+	public class EPackageInfo
 	{
 		public const string SectionName = "易包信息段1";
 
 		public string[] FileNames;
 
-		public static EPackageInfo Parse(byte[] data)
+		public static EPackageInfo Parse(SectionInfo sectionInfo, bool cryptEc = false)
 		{
-			EPackageInfo ePackageInfo = new EPackageInfo();
+            byte[] data = sectionInfo.Data;
+
+            EPackageInfo ePackageInfo = new EPackageInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
 			{
 				List<string> list = new List<string>();
