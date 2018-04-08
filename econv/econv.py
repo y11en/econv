@@ -53,6 +53,7 @@ def convert(sections):
         gen_base_info(sections),
         gen_user_info(sections),
         gen_libs_info(sections),
+        gen_const(sections),
         gen_dll_declare(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
@@ -374,6 +375,18 @@ def _gen_dll_declare(declare):
 
 def gen_dll_declare(sections):
     return '\n'.join(map(_gen_dll_declare, sections['程序段'].DllDeclares))
+
+
+def gen_const(sections):
+    header = [['常量名称', '常量值', '公开', '备注']]
+    body = list(map(
+        lambda c: [c.Name, c.Value, check(c.Flags, 2), c.Comment],
+        filter(lambda c: c.Type == 1, sections['程序资源段'].Constants)
+    ))
+
+    if not len(body): return ''
+
+    return SingleTable(header + body).table
 
 
 def main(args, argv):
