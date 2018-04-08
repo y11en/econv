@@ -155,7 +155,7 @@ def get_type_name(idx):
     elif idx == 0:
         return ''
     else:
-        return "-Unknown-"
+        return "未知::%08X" % idx
 
 
 def get_global_variable_info(var):
