@@ -53,11 +53,11 @@ def convert(sections):
         gen_base_info(sections),
         gen_user_info(sections),
         gen_libs_info(sections),
+        gen_dll_declare(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
         gen_form_info(sections),
         gen_unknown_section(sections),
-        gen_dll_declare(sections),
     ))
 
 
