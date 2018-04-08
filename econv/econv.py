@@ -59,6 +59,7 @@ def convert(sections):
         gen_class_data(sections),
         gen_form_info(sections),
         gen_unknown_section(sections),
+        gen_image_res(sections),
     ))
 
 
@@ -387,6 +388,22 @@ def gen_const(sections):
     if not len(body): return ''
 
     return SingleTable(header + body).table
+
+
+def gen_res(sections, typeid, title):
+    header = [[title, '数据签名', '公开', '备注']]
+    body = list(map(
+        lambda c: [c.Name, hash_data(c.Value), check(c.Flags, 2), c.Comment],
+        filter(lambda c: c.Type == typeid, sections['程序资源段'].Constants)
+    ))
+
+    if not len(body): return ''
+
+    return SingleTable(header + body).table
+
+
+def gen_image_res(sections):
+    return gen_res(sections, 2, '图片或图片组名称')
 
 
 def main(args, argv):
