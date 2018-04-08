@@ -175,6 +175,15 @@ def gen_method(title, section, cls, methods):
     return result
 
 
+def get_class_variable_info(var):
+    return [
+        var.Name,
+        var.TypeName,
+        ','.join(map(lambda i: str(i), var.UBound)),
+        var.Comment
+    ]
+
+
 def gen_class_data(sections):
     section = sections['程序段']
     epkgs = sections['易包信息段1'].FileNames
@@ -188,6 +197,9 @@ def gen_class_data(sections):
         if cls.BaseClass == 0:
             data.append(['程序集名', '保留', '保留', '备注'])
             data.append([cls.Name, '', '', cls.Comment])
+            if cls.Variables:
+                data.append(['变量名', '类型', '数组', '备注'])
+
             title = '子程序名'
         else:
             data.append(['类名', '基类', '公开', '备注'])
@@ -198,8 +210,11 @@ def gen_class_data(sections):
                 '',
                 cls.Comment
             ])
+            if cls.Variables:
+                data.append(['私有成员名', '类型', '数组', '备注'])
             title = '方法名'
 
+        data += [ get_class_variable_info(var) for var in cls.Variables ]
         result += SingleTable(data).table + '\n'
         result += gen_method(title, section, cls, methods) + '\n'
 
