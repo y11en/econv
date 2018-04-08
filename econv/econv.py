@@ -54,12 +54,13 @@ def convert(sections):
         gen_user_info(sections),
         gen_libs_info(sections),
         gen_const(sections),
+        gen_sound_res(sections),
+        gen_image_res(sections),
         gen_dll_declare(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
         gen_form_info(sections),
         gen_unknown_section(sections),
-        gen_image_res(sections),
     ))
 
 
@@ -404,6 +405,10 @@ def gen_res(sections, typeid, title):
 
 def gen_image_res(sections):
     return gen_res(sections, 2, '图片或图片组名称')
+
+
+def gen_sound_res(sections):
+    return gen_res(sections, 3, '声音名称')
 
 
 def main(args, argv):
