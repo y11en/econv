@@ -49,13 +49,14 @@ def convert(sections):
     return '\n'.join((
         gen_base_info(sections),
         gen_user_info(sections),
+        gen_global_variable(sections),
     ))
 
 
 def gen_base_info(sections):
     section = sections['系统信息段']
     
-    table=SingleTable([
+    table = SingleTable([
         [
             '易语言版本', str(section.ESystemVersion), '格式版本',
             '%s-%s'%(section.EProjectFormatVersion, section.Language)
@@ -93,7 +94,6 @@ def gen_user_info(sections):
     ]
 
     for table in tables:
-        table.inner_row_border = True
         table.justify_columns[0] = 'right'
 
     tables[2].justify_columns[2] = 'right'
@@ -101,6 +101,29 @@ def gen_user_info(sections):
     adjust_tables(1, tables[0], tables[2])
 
     return merge_tables(*tables)
+
+
+def get_global_variable_info(var):
+    return [
+        var.Name,
+        '',
+        ','.join(map(lambda i: str(i), var.UBound)),
+        '  x' if var.Flags else '',
+        var.Comment
+    ]
+
+
+def gen_global_variable(sections):
+    section = sections['程序段']
+    variables = section.GlobalVariables
+    if len(variables) == 0: return ''
+
+    data = [ get_global_variable_info(var) for var in variables ]
+    data = [['全局变量名', '类型', '数组', '公开', '备注']] + data
+    
+    table = SingleTable(data)
+    
+    return table.table
 
 
 def main(args, argv):

@@ -36,6 +36,10 @@ class SingleTable(terminaltables.SingleTable):
     CHAR_OUTER_TOP_LEFT = '┌'
     CHAR_OUTER_TOP_RIGHT = '┐'
 
+    def __init__(self, *args, **kwargs):
+        super(SingleTable, self).__init__(*args, **kwargs)
+        self.inner_row_border = True
+
 
 def gen_table(table):
     dimensions = max_dimensions(table.table_data, table.padding_left, table.padding_right)[:3]
