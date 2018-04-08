@@ -106,7 +106,7 @@ def gen_user_info(sections):
 def get_global_variable_info(var):
     return [
         var.Name,
-        '',
+        var.TypeName,
         ','.join(map(lambda i: str(i), var.UBound)),
         '  x' if var.Flags else '',
         var.Comment
