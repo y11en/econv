@@ -1,7 +1,7 @@
 #-*- encoding: utf-8 -*-
 
 import clr
-clr.AddReferenceToFileAndPath('EProjectFile.dll')
+clr.AddReference('EProjectFile.dll')
 from EProjectFile import *
 
 from sys import stderr, exit
