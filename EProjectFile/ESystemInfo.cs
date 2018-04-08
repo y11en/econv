@@ -21,9 +21,11 @@ namespace EProjectFile
 
 		public int ProjectType;
 
-		public static ESystemInfo Parse(byte[] data)
+		public static ESystemInfo Parse(SectionInfo section)
 		{
-			ESystemInfo eSystemInfo = new ESystemInfo();
+            byte[] data = section.Data;
+
+            ESystemInfo eSystemInfo = new ESystemInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
 			{
 				eSystemInfo.ESystemVersion = new Version(binaryReader.ReadInt16(), binaryReader.ReadInt16());

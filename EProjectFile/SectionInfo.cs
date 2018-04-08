@@ -2,7 +2,7 @@ namespace EProjectFile
 {
 	public class SectionInfo
 	{
-		public string Name;
+		public string SectionName;
 
 		public byte[] Key = new byte[4]
 		{

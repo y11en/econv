@@ -60,7 +60,7 @@ namespace EProjectFile
             }
             reader.ReadInt32();
             sectionInfo.Key = reader.ReadBytes(4);
-            sectionInfo.Name = DecodeName(sectionInfo.Key, reader.ReadBytes(30));
+            sectionInfo.SectionName = DecodeName(sectionInfo.Key, reader.ReadBytes(30));
             reader.ReadInt16();
             reader.ReadInt32();
             sectionInfo.Flags = reader.ReadInt32();

@@ -6,8 +6,8 @@ from EProjectFile import *
 
 from sys import stderr, exit
 from collections import OrderedDict
-
-from table import SingleTable
+from table import SingleTable, merge_tables
+from wcwidth import wcswidth
 
 
 ERROR_SUCC = 0
@@ -27,14 +27,15 @@ def load(filename, password):
 
         with ProjectFileReader(filename, password) as project:
             parsers = {
-                '系统信息段': ESystemInfo.Parse
+                '系统信息段': ESystemInfo.Parse,
+                '用户信息段': ProjectConfigInfo.Parse,
             }
 
             sections = OrderedDict()
 
             while not project.IsFinish():
                 section = project.ReadSection()
-                sections[section.Name] = parsers.get(section.Name, lambda x: x)(section.Data)
+                sections[section.SectionName] = parsers.get(section.SectionName, lambda x: x)(section)
 
             return sections
 
@@ -44,10 +45,13 @@ def load(filename, password):
 
 
 def convert(sections):
-    return gen_base_nfo(sections)
+    return '\n'.join((
+        gen_base_info(sections),
+        gen_user_info(sections),
+    ))
 
 
-def gen_base_nfo(sections):
+def gen_base_info(sections):
     section = sections['系统信息段']
     return SingleTable([[
         '易语言版本: %s' % section.ESystemVersion,
@@ -56,6 +60,43 @@ def gen_base_nfo(sections):
         '文件类型: %s' % FILE_TYPES[section.FileType],
         '项目类型: %s' % PROJECT_TYPES[section.ProjectType],
     ]], "基本信息").table
+
+
+def gen_user_info(sections):
+    section = sections['用户信息段']
+
+    tables = [
+        SingleTable([
+            ['*程序名称', section.Name, '*程序版本', str(section.Version)]
+        ]),
+        SingleTable([
+            [' 编译插件', section.CompilePlugins]
+        ]),
+        SingleTable([
+            ['*作者', section.Author, ' 电子信箱', section.Email],
+            [' 联系地址', section.Address, '邮政编码', section.ZipCode],
+            ['电话', section.TelephoneNumber, '传真', section.FaxNumber],
+        ]),
+        SingleTable([
+            [' 主页地址', section.Homepage],
+            [' 版权声明', section.CopyrightNotice],
+            ['*程序描述', section.Description],
+        ])
+    ]
+
+    for t in tables:
+        t.inner_row_border = True
+        t.justify_columns[0] = 'right'
+
+    table0_col1_width = tables[0].column_widths[1]
+    table2_col1_width = tables[2].column_widths[1]
+    col1_max_width = max(table0_col1_width, table2_col1_width)
+    if table0_col1_width < col1_max_width:
+        tables[0].table_data[0][1] += ' ' * (col1_max_width - wcswidth(tables[0].table_data[0][1]))
+    else:
+        tables[2].table_data[0][1] += ' ' * (col1_max_width - wcswidth(tables[2].table_data[0][1]))
+
+    return merge_tables(*tables)
 
 
 def main(args, argv):

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class ProjectConfigInfo : ToJson
+	public class ProjectConfigInfo
 	{
 		public const string SectionName = "用户信息段";
 
@@ -38,9 +38,11 @@ namespace EProjectFile
 
 		public bool ExportPublicClassMethod;
 
-		public static ProjectConfigInfo Parse(byte[] data)
+		public static ProjectConfigInfo Parse(SectionInfo section)
 		{
-			ProjectConfigInfo projectConfigInfo = new ProjectConfigInfo();
+            byte[] data = section.Data;
+
+            ProjectConfigInfo projectConfigInfo = new ProjectConfigInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
 			{
 				projectConfigInfo.Name = binaryReader.ReadStringWithLengthPrefix();
