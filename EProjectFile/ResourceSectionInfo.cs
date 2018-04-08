@@ -3,7 +3,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class ResourceSectionInfo : ToJson
+	public class ResourceSectionInfo
 	{
 		public const string SectionName = "程序资源段";
 
@@ -11,9 +11,11 @@ namespace EProjectFile
 
 		public ConstantInfo[] Constants;
 
-		public static ResourceSectionInfo Parse(byte[] data)
+		public static ResourceSectionInfo Parse(SectionInfo sectionInfo, bool cryptEc = false)
 		{
-			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
+            byte[] data = sectionInfo.Data;
+
+            using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
 			{
 				return new ResourceSectionInfo
 				{

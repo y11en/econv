@@ -4,7 +4,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class FormInfo
+	public class FormInfo
 	{
 		public int Id;
 

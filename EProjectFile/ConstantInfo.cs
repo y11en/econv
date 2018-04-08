@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class ConstantInfo : IHasId
+	public class ConstantInfo : IHasId
 	{
 		private class ConstantValueConverter:JsonConverter
 		{

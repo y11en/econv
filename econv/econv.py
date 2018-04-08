@@ -31,6 +31,7 @@ def load(filename, password):
                 '用户信息段': ProjectConfigInfo.Parse,
                 '程序段': CodeSectionInfo.Parse,
                 '易包信息段1': EPackageInfo.Parse,
+                '程序资源段': ResourceSectionInfo.Parse,
             }
 
             sections = OrderedDict()
@@ -54,8 +55,13 @@ def convert(sections):
         gen_libs_info(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
+        gen_form_info(sections),
         gen_unknown_section(sections),
     ))
+
+
+def check(b, padding=0):
+    return ' ' * padding + 'x' if b else ''
 
 
 def gen_base_info(sections):
@@ -72,8 +78,14 @@ def gen_base_info(sections):
     return table.table
 
 
-def hash_data(data, hex=False):
-    return '%08x-%s' % (len(data), md5('data').hexdigest())
+def hash_data(*data):
+    hash = md5()
+    length = 0
+    for d in data:
+        d = d if isinstance(d, bytes) else str(d).encode()
+        length += len(d)
+        hash.update(d)
+    return '%08x-%s' % (length, hash.hexdigest())
 
 
 def gen_user_info(sections):
@@ -121,7 +133,7 @@ def get_global_variable_info(var):
         var.Name,
         var.TypeName,
         ','.join(map(lambda i: str(i), var.UBound)),
-        '  x' if var.Flags else '',
+        check(var.Flags, 2),
         var.Comment
     ]
 
@@ -147,7 +159,7 @@ def get_local_variable_info(var):
     return [
         var.Name,
         var.TypeName,
-        '  x' if var.Flags else '',
+        check(var.Flags, 2),
         ','.join(map(lambda i: str(i), var.UBound)),
         var.Comment
     ]
@@ -173,7 +185,7 @@ def gen_method(title, section, cls, methods):
             [
                 '%s::%s'%(cls.Name,method.Name),
                 '',
-                'x' if method.Flags else '',
+                check(method.Flags, 2),
                 epkg if epkg else '',
                 method.Comment
             ]
@@ -252,6 +264,33 @@ def gen_unknown_section(sections):
         for s in filter(lambda s: isinstance(s, SectionInfo), sections.values()) ]
         
     return SingleTable(data).table
+
+
+def gen_form_info(sections):
+    result = ''
+    for form in sections['程序资源段'].Forms:
+        data = [['窗口元素名', '左边', '顶边', '宽度', '高度', '标记', '可视', '禁止', '其他数据签名']]
+        data += [
+            [
+                e.Name if e != form.Elements[0] else form.Name,
+                str(e.Left), str(e.Top), str(e.Width), str(e.Height), e.Tag,
+                check(e.Visible, 2), check(e.Disable, 2),
+                hash_data(e.Cursor, e.ExtensionData, e.Children)
+            ]
+            for e in form.Elements
+        ]
+
+        body = SingleTable(data)
+
+        footer = SingleTable([
+            ['备注', form.Comment],
+        ])
+
+        adjust_tables(0, body, footer)
+
+        result += merge_tables(body, footer) + '\n'
+
+    return result
 
 
 def main(args, argv):

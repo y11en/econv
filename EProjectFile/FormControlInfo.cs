@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EProjectFile
 {
-	internal class FormControlInfo : FormElementInfo
+	public class FormControlInfo : FormElementInfo
 	{
 		[JsonIgnore]
 		public byte[] UnknownBeforeName;

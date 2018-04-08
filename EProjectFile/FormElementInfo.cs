@@ -2,7 +2,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal abstract class FormElementInfo : IHasId
+	public abstract class FormElementInfo : IHasId
 	{
 		private int id;
 
