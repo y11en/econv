@@ -412,7 +412,7 @@ namespace EProjectFile
                     }
                 }
 
-                return $"{target}{name}{paramlist}";
+                return $"{target}{name} {paramlist}";
             }
 		}
 

@@ -50,6 +50,7 @@ def convert(sections):
         gen_base_info(sections),
         gen_user_info(sections),
         gen_global_variable(sections),
+        gen_class_variable(sections),
     ))
 
 
@@ -124,6 +125,46 @@ def gen_global_variable(sections):
     table = SingleTable(data)
     
     return table.table
+
+
+def tab(text, n):
+    return '\n'.join(map(lambda l: ' '*n+l if l else l, text.split('\n')))
+
+
+def gen_method(title, section, cls, methods):
+    result = ''
+    for idx in cls.Method:
+        method = methods[idx]
+        data = [
+            [title, '返回值类型', '公开', '易包', '备注'],
+            ['%s::%s'%(cls.Name,method.Name), '', 'x' if method.Flags else '', '', method.Comment]
+        ]
+        result += SingleTable(data).table + '\n'
+        result += tab(method.Code, 2) + '\n'
+
+    return result
+
+
+def gen_class_variable(sections):
+    section = sections['程序段']
+    methods = dict(map(lambda m: (m.Id,m), section.Methods))
+
+    result = ''
+    for cls in section.Classes:
+        data = []
+        if cls.BaseClass == 0:
+            data.append(['程序集名', '保留', '保留', '备注'])
+            data.append([cls.Name, '', '', cls.Comment])
+            title = '子程序名'
+        else:
+            data.append(['类名', '基类', '公开', '备注'])
+            data.append([cls.Name, '', '', cls.Comment])
+            title = '方法名'
+
+        result += SingleTable(data).table + '\n'
+        result += gen_method(title, section, cls, methods) + '\n'
+
+    return result
 
 
 def main(args, argv):
