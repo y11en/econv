@@ -38,9 +38,9 @@ namespace EProjectFile
 
 		public bool ExportPublicClassMethod;
 
-		public static ProjectConfigInfo Parse(SectionInfo section)
+		public static ProjectConfigInfo Parse(SectionInfo sectionInfo, bool cryptEc = false)
 		{
-            byte[] data = section.Data;
+            byte[] data = sectionInfo.Data;
 
             ProjectConfigInfo projectConfigInfo = new ProjectConfigInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))

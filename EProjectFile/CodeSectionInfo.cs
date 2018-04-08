@@ -3,8 +3,8 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class CodeSectionInfo
-	{
+	public class CodeSectionInfo
+    {
 		public const string SectionName = "程序段";
 
 		[JsonIgnore]
@@ -29,9 +29,10 @@ namespace EProjectFile
 
 		public DllDeclareInfo[] DllDeclares;
 
-		public static CodeSectionInfo Parse(byte[] data, bool cryptEc = false)
+		public static CodeSectionInfo Parse(SectionInfo sectionInfo, bool cryptEc = false)
 		{
-			CodeSectionInfo codeSectionInfo = new CodeSectionInfo();
+            byte[] data = sectionInfo.Data;
+            CodeSectionInfo codeSectionInfo = new CodeSectionInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
 			{
 				using (BinaryWriter binaryWriter = new BinaryWriter(new MemoryStream()))

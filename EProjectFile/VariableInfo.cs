@@ -3,7 +3,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class VariableInfo : IHasId
+	public class VariableInfo : IHasId
 	{
 		private int id;
 

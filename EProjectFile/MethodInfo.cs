@@ -4,7 +4,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class MethodInfo : IHasId
+	public class MethodInfo : IHasId
 	{
 		private int id;
 

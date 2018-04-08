@@ -28,13 +28,15 @@ def load(filename, password):
             parsers = {
                 '系统信息段': ESystemInfo.Parse,
                 '用户信息段': ProjectConfigInfo.Parse,
+                '程序段': CodeSectionInfo.Parse
             }
 
             sections = OrderedDict()
 
             while not project.IsFinish():
                 section = project.ReadSection()
-                sections[section.SectionName] = parsers.get(section.SectionName, lambda x: x)(section)
+                parser = parsers.get(section.SectionName, lambda x, y: x)
+                sections[section.SectionName] = parser(section, project.CryptEc)
 
             return sections
 

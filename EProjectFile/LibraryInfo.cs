@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EProjectFile
 {
-	internal class LibraryInfo
+	public class LibraryInfo
 	{
 		public string FileName;
 

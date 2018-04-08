@@ -4,7 +4,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class StructInfo : IHasId
+	public class StructInfo : IHasId
 	{
 		private int id;
 

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace EProjectFile
 {
-	internal class DllDeclareInfo : IHasId
+	public class DllDeclareInfo : IHasId
 	{
 		private int id;
 

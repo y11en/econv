@@ -21,9 +21,9 @@ namespace EProjectFile
 
 		public int ProjectType;
 
-		public static ESystemInfo Parse(SectionInfo section)
+		public static ESystemInfo Parse(SectionInfo sectionInfo, bool cryptEc = false)
 		{
-            byte[] data = section.Data;
+            byte[] data = sectionInfo.Data;
 
             ESystemInfo eSystemInfo = new ESystemInfo();
 			using (BinaryReader binaryReader = new BinaryReader(new MemoryStream(data, false)))
