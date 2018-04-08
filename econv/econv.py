@@ -128,10 +128,39 @@ def gen_user_info(sections):
     return merge_tables(*tables)
 
 
+def get_variable_type(idx):
+    if idx == 0x80000101:
+        return "字节型"
+    elif idx == 0x80000201:
+        return "短整数型"
+    elif idx == 0x80000301:
+        return "整数型"
+    elif idx == 0x80000401:
+        return "长整数型"
+    elif idx == 0x80000501:
+        return "小数型"
+    elif idx == 0x80000601:
+        return "双精度小数型"
+    elif idx == 0x80000002:
+        return "逻辑型"
+    elif idx == 0x80000003:
+        return "日期时间型"
+    elif idx == 0x80000004:
+        return "文本型"
+    elif idx == 0x80000005:
+        return "字节集型"
+    elif idx == 0x80000006:
+        return "子程序指针型"
+    elif idx == 0:
+        return ''
+    else:
+        return "-Unknown-"
+
+
 def get_global_variable_info(var):
     return [
         var.Name,
-        var.TypeName,
+        get_variable_type(var.DataType),
         ','.join(map(lambda i: str(i), var.UBound)),
         check(var.Flags, 2),
         var.Comment
@@ -158,7 +187,7 @@ def tab(text, n):
 def get_local_variable_info(var):
     return [
         var.Name,
-        var.TypeName,
+        get_variable_type(var.DataType),
         check(var.Flags, 2),
         ','.join(map(lambda i: str(i), var.UBound)),
         var.Comment
@@ -201,7 +230,7 @@ def gen_method(title, section, cls, methods):
 def get_class_variable_info(var):
     return [
         var.Name,
-        var.TypeName,
+        get_variable_type(var.DataType),
         ','.join(map(lambda i: str(i), var.UBound)),
         var.Comment
     ]
