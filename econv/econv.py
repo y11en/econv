@@ -8,6 +8,7 @@ from sys import stderr, exit
 from collections import OrderedDict
 from table import SingleTable, merge_tables, adjust_tables
 from wcwidth import wcswidth
+from hashlib import md5
 
 
 ERROR_SUCC = 0
@@ -70,15 +71,23 @@ def gen_base_info(sections):
     return table.table
 
 
+def hash_data(data):
+    return '%d-%s' % (len(data), md5('data').hexdigest())
+
+
 def gen_user_info(sections):
     section = sections['用户信息段']
+    cmd = sections['程序段'].DebugCommandParameters
+    icon = hash_data(sections['程序段'].IconData)
 
     tables = [
         SingleTable([
             ['*程序名称', section.Name, '*程序版本', str(section.Version)]
         ]),
         SingleTable([
-            [' 编译插件', section.CompilePlugins]
+            [' 编译插件', section.CompilePlugins],
+            [' 调试参数', cmd],
+            [' 程序图标', icon]
         ]),
         SingleTable([
             ['*作者', section.Author, ' 电子信箱', section.Email],
