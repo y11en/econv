@@ -210,7 +210,7 @@ def gen_method(title, section, cls, methods):
     result = ''
     for idx in cls.Method:
         method, epkg = methods[idx]
-        data = [
+        header = SingleTable([
             [title, '返回值类型', '公开', '易包', '备注'],
             [
                 '%s::%s'%(cls.Name,method.Name),
@@ -219,8 +219,26 @@ def gen_method(title, section, cls, methods):
                 epkg if epkg else '',
                 method.Comment
             ]
-        ]
-        result += SingleTable(data).table + '\n'
+        ])
+
+        if len(method.Parameters):
+            params = SingleTable([['参数名', '类型', '参考', '可空', '数组', '备注']])
+            params.table_data += list(map(
+                lambda p: [
+                    p.Name, get_type_name(p.DataType),
+                    check(p.Flags & 4, 2), check(p.Flags & 2, 2),
+                    ','.join(p.UBound), p.Comment],
+                method.Parameters
+            ))
+            adjust_tables(0, params, header)
+            adjust_tables(1, params, header)
+            adjust_tables(2, params, header)
+            adjust_tables(3, params, header)
+
+            result += merge_tables(header, params) + '\n'
+        else:
+            result += header.table + '\n'
+
         local_var = gen_local_variable(method)
         if local_var: result +=  local_var + "\n"
         result += tab(method.Code, 2) + '\n'
