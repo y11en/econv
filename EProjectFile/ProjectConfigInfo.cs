@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 
@@ -29,7 +27,6 @@ namespace EProjectFile
 
 		public string CopyrightNotice;
 
-		[JsonConverter(typeof(VersionConverter))]
 		public Version Version;
 
 		public bool NotWriteVersion;

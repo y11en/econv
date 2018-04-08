@@ -1,11 +1,9 @@
-using Newtonsoft.Json;
 using System.IO;
 
 namespace EProjectFile
 {
 	internal class FormMenuInfo : FormElementInfo
 	{
-		[JsonIgnore]
 		public byte[] UnknownBeforeName;
 
 		public int HotKey;
@@ -18,7 +16,6 @@ namespace EProjectFile
 
 		public int ClickEvent;
 
-		[JsonIgnore]
 		public byte[] UnknownAfterClickEvent;
 
 		internal static FormMenuInfo ReadWithoutDataType(BinaryReader reader, int length)
@@ -52,11 +49,6 @@ namespace EProjectFile
 			writer.WriteCStyleString(Text);
 			writer.Write(ClickEvent);
 			writer.Write(UnknownAfterClickEvent);
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

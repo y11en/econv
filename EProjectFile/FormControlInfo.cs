@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,12 +7,10 @@ namespace EProjectFile
 {
 	public class FormControlInfo : FormElementInfo
 	{
-		[JsonIgnore]
 		public byte[] UnknownBeforeName;
 
 		public string Comment;
 
-		[JsonIgnore]
 		public int UnknownBeforeLeft;
 
 		public int Left;
@@ -24,30 +21,24 @@ namespace EProjectFile
 
 		public int Height;
 
-		[JsonIgnore]
 		public int UnknownBeforeParent;
 
 		public int Parent;
 
 		public int[] Children;
 
-		[JsonConverter(typeof(HexConverter))]
 		public byte[] Cursor;
 
 		public string Tag;
 
-		[JsonIgnore]
 		public int UnknownBeforeVisible;
 
-		[JsonIgnore]
 		public int UnknownBeforeEvents;
 
 		public KeyValuePair<int, int>[] Events;
 
-		[JsonIgnore]
 		public byte[] UnknownBeforeExtensionData;
 
-		[JsonConverter(typeof(HexConverter))]
 		public byte[] ExtensionData;
 
 		internal static FormControlInfo ReadWithoutDataType(BinaryReader reader, int length)
@@ -106,11 +97,6 @@ namespace EProjectFile
 			});
 			writer.Write(UnknownBeforeExtensionData);
 			writer.Write(ExtensionData);
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

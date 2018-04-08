@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.IO;
 
 namespace EProjectFile
@@ -47,11 +46,6 @@ namespace EProjectFile
                 writer.WriteCStyleString(elem.Name);
                 writer.WriteCStyleString(elem.Comment);
             });
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject((object)this, Formatting.Indented);
         }
     }
 }

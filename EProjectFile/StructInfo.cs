@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -8,7 +7,6 @@ namespace EProjectFile
 	{
 		private int id;
 
-		[JsonIgnore]
 		public int UnknownAfterId;
 
 		public int Flags;
@@ -65,11 +63,6 @@ namespace EProjectFile
 				writer.WriteStringWithLengthPrefix(structInfo.Comment);
 				VariableInfo.WriteVariables(writer, structInfo.Member);
 			}
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

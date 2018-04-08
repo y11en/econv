@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.IO;
 
 namespace EProjectFile
@@ -7,12 +6,10 @@ namespace EProjectFile
     {
 		public const string SectionName = "程序段";
 
-		[JsonIgnore]
 		public byte[] UnknownBeforeLibrary;
 
 		public LibraryInfo[] Libraries;
 
-		[JsonIgnore]
 		public byte[] UnknownBeforeIconData;
 
 		public byte[] IconData;
@@ -125,11 +122,6 @@ namespace EProjectFile
 			StructInfo.WriteStructs(writer, Structs);
 			DllDeclareInfo.WriteDllDeclares(writer, DllDeclares);
 			writer.Write(new byte[40]);
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

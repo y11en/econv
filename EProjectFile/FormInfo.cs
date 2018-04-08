@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -62,11 +61,6 @@ namespace EProjectFile
 				writer.WriteStringWithLengthPrefix(formInfo.Comment);
 				FormElementInfo.WriteFormElements(writer, formInfo.Elements);
 			}
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 
@@ -9,12 +7,10 @@ namespace EProjectFile
     {
 		public const string SectionName = "系统信息段";
 
-		[JsonConverter(typeof(VersionConverter))]
 		public Version ESystemVersion;
 
 		public int Language = 1;
 
-		[JsonConverter(typeof(VersionConverter))]
 		public Version EProjectFormatVersion;
 
 		public int FileType = 1;

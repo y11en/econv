@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -8,7 +7,6 @@ namespace EProjectFile
 	{
 		private int id;
 
-		[JsonIgnore]
 		public int UnknownAfterId;
 
 		public int Type;
@@ -25,7 +23,6 @@ namespace EProjectFile
 
 		public VariableInfo[] Parameters;
 
-		[JsonIgnore]
 		public byte[][] CodeData;
 
 		public int Id => id;
@@ -91,11 +88,6 @@ namespace EProjectFile
 					writer.WriteBytesWithLengthPrefix(x);
 				});
 			}
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

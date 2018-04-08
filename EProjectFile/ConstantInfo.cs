@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 
@@ -7,106 +5,6 @@ namespace EProjectFile
 {
 	public class ConstantInfo : IHasId
 	{
-		private class ConstantValueConverter:JsonConverter
-		{
-			public override bool CanConvert(Type objectType)
-			{
-				return true;
-			}
-
-			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-			{
-				//IL_0002: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0007: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0008: Unknown result type (might be due to invalid IL or missing references)
-				//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-				//IL_000c: Invalid comparison between Unknown and I4
-				//IL_001d: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0023: Invalid comparison between Unknown and I4
-				//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0041: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0043: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0046: Invalid comparison between Unknown and I4
-				//IL_004a: Unknown result type (might be due to invalid IL or missing references)
-				//IL_004d: Invalid comparison between Unknown and I4
-				//IL_0054: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0058: Invalid comparison between Unknown and I4
-				//IL_00c9: Unknown result type (might be due to invalid IL or missing references)
-				JsonToken tokenType = reader.TokenType;
-				if ((int)tokenType - 7 <= 3)
-				{
-					return reader.Value;
-				}
-				if ((int)reader.TokenType != 1)
-				{
-					throw new Exception();
-				}
-				object obj = null;
-				while (reader.Read())
-				{
-					JsonToken tokenType2 = reader.TokenType;
-					if ((int)tokenType2 != 4)
-					{
-						if ((int)tokenType2 != 5)
-						{
-							if ((int)tokenType2 == 13)
-							{
-								return obj;
-							}
-							throw new Exception();
-						}
-						continue;
-					}
-					if (obj != null)
-					{
-						throw new Exception();
-					}
-					string value = (string)reader.Value;
-					reader.Read();
-					if ("bytes".Equals(value))
-					{
-						obj = new HexConverter().ReadJson(reader, typeof(byte[]), (object)null, serializer);
-						continue;
-					}
-					if ("date".Equals(value))
-					{
-						obj = new IsoDateTimeConverter().ReadJson(reader, typeof(byte[]), (object)null, serializer);
-						continue;
-					}
-					throw new Exception();
-				}
-				throw new Exception();
-			}
-
-			public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-			{
-				//IL_005b: Unknown result type (might be due to invalid IL or missing references)
-				if (value is byte[])
-				{
-					writer.WriteStartObject();
-					writer.WritePropertyName("bytes");
-					new HexConverter().WriteJson(writer, value, serializer);
-					writer.WriteEndObject();
-				}
-				else if (value is DateTime)
-				{
-					writer.WriteStartObject();
-					writer.WritePropertyName("date");
-					new IsoDateTimeConverter().WriteJson(writer, value, serializer);
-					writer.WriteEndObject();
-				}
-				else
-				{
-					writer.WriteValue(value);
-				}
-			}
-
-			//public ConstantValueConverter()
-			//	: this()
-			//{
-			//}
-		}
-
 		private int id;
 
 		public int Flags;
@@ -115,7 +13,6 @@ namespace EProjectFile
 
 		public string Comment;
 
-		[JsonConverter(typeof(ConstantValueConverter))]
 		public object Value;
 
 		public int Id => id;
@@ -228,11 +125,6 @@ namespace EProjectFile
 				}
 				throw new Exception();
 			});
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

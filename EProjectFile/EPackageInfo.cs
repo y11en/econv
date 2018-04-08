@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 
@@ -30,11 +29,6 @@ namespace EProjectFile
 				ePackageInfo.FileNames = list.ToArray();
 			}
 			return ePackageInfo;
-		}
-
-		public override string ToString()
-		{
-			return JsonConvert.SerializeObject((object)this, Formatting.Indented);
 		}
 	}
 }

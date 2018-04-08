@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,7 +53,6 @@
     <Compile Include="FormElementInfo.cs" />
     <Compile Include="FormInfo.cs" />
     <Compile Include="FormMenuInfo.cs" />
-    <Compile Include="HexConverter.cs" />
     <Compile Include="IHasId.cs" />
     <Compile Include="LibraryInfo.cs" />
     <Compile Include="MethodInfo.cs" />
@@ -66,7 +62,6 @@
     <Compile Include="ResourceSectionInfo.cs" />
     <Compile Include="SectionInfo.cs" />
     <Compile Include="StructInfo.cs" />
-    <Compile Include="ToJson.cs" />
     <Compile Include="VariableInfo.cs" />
   </ItemGroup>
   <ItemGroup>
