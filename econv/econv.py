@@ -315,7 +315,7 @@ def gen_unknown_section(sections):
 
 
 def gen_form_info(sections):
-    result = ''
+    result = []
     for form in sections['程序资源段'].Forms:
         data = [['窗口元素名', '左边', '顶边', '宽度', '高度', '标记', '可视', '禁止', '其他数据签名']]
         data += [
@@ -336,9 +336,9 @@ def gen_form_info(sections):
 
         adjust_tables(0, body, footer)
 
-        result += merge_tables(body, footer) + '\n'
+        result.append(merge_tables(body, footer))
 
-    return result
+    return '\n'.join(result)
 
 
 def _gen_dll_declare(declare):
