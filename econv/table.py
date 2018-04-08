@@ -2,6 +2,8 @@
 
 import terminaltables
 from terminaltables.width_and_alignment import max_dimensions
+from wcwidth import wcswidth
+
 
 class SingleTable(terminaltables.SingleTable):
     CHAR_F_INNER_HORIZONTAL = '─'
@@ -43,7 +45,10 @@ def gen_table(table):
 def normalize_tables(*tables):
     widths = list(map(lambda t: t.table_width, tables))
     max_width = max(widths)
-    for t, w in zip(tables, widths): t.table_data[0][-1] += ' ' * (max_width - w)
+    for table, width in zip(tables, widths):
+        padding_to_column_with = table.column_widths[-1] - wcswidth(table.table_data[0][-1])
+        padding_to_max_width = max_width - width
+        table.table_data[0][-1] += ' ' * (padding_to_column_with + padding_to_max_width)
 
 
 def merge_tables(table0, *tables):
@@ -69,3 +74,12 @@ def merge_tables(table0, *tables):
         result += rows
 
     return '\n'.join(result)
+
+
+def adjust_tables(col, *tables):
+    widths = list(map(lambda t: t.column_widths[col], tables))
+    max_width = max(widths)
+
+    for table, width in zip(tables, widths):
+        if width < max_width:
+            table.table_data[0][col] += ' ' * (max_width - wcswidth(table.table_data[0][col]))

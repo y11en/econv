@@ -6,7 +6,7 @@ from EProjectFile import *
 
 from sys import stderr, exit
 from collections import OrderedDict
-from table import SingleTable, merge_tables
+from table import SingleTable, merge_tables, adjust_tables
 from wcwidth import wcswidth
 
 
@@ -53,13 +53,22 @@ def convert(sections):
 
 def gen_base_info(sections):
     section = sections['系统信息段']
-    return SingleTable([[
-        '易语言版本: %s' % section.ESystemVersion,
-        '语言: %s' % LANGUAGES[section.Language],
-        '格式版本: %s' % section.EProjectFormatVersion,
-        '文件类型: %s' % FILE_TYPES[section.FileType],
-        '项目类型: %s' % PROJECT_TYPES[section.ProjectType],
-    ]], "基本信息").table
+
+    tables = [
+        SingleTable([
+            [
+                '易语言版本', str(section.ESystemVersion), '格式版本', section.EProjectFormatVersion,
+                LANGUAGES[section.Language]
+            ]
+        ], '基本信息'),
+        SingleTable([
+            ['  文件类型', FILE_TYPES[section.FileType], '项目类型', PROJECT_TYPES[section.ProjectType]]
+        ]),
+    ]
+
+    adjust_tables(1, *tables)
+
+    return merge_tables(*tables)
 
 
 def gen_user_info(sections):
@@ -68,7 +77,7 @@ def gen_user_info(sections):
     tables = [
         SingleTable([
             ['*程序名称', section.Name, '*程序版本', str(section.Version)]
-        ]),
+        ], '用户信息'),
         SingleTable([
             [' 编译插件', section.CompilePlugins]
         ]),
@@ -81,20 +90,18 @@ def gen_user_info(sections):
             [' 主页地址', section.Homepage],
             [' 版权声明', section.CopyrightNotice],
             ['*程序描述', section.Description],
+        ]),
+        SingleTable([
+            ['[ ]' if section.NotWriteVersion else '[x]', '在编译DLL时允许输出别公开类的公开方法'],
+            ['[x]' if section.ExportPublicClassMethod else '[ ]', '将此程序带星号项同时写入编译后的可执行文件版本信息中']
         ])
     ]
 
-    for t in tables:
-        t.inner_row_border = True
-        t.justify_columns[0] = 'right'
+    for table in tables:
+        table.inner_row_border = True
+        table.justify_columns[0] = 'right'
 
-    table0_col1_width = tables[0].column_widths[1]
-    table2_col1_width = tables[2].column_widths[1]
-    col1_max_width = max(table0_col1_width, table2_col1_width)
-    if table0_col1_width < col1_max_width:
-        tables[0].table_data[0][1] += ' ' * (col1_max_width - wcswidth(tables[0].table_data[0][1]))
-    else:
-        tables[2].table_data[0][1] += ' ' * (col1_max_width - wcswidth(tables[2].table_data[0][1]))
+    adjust_tables(1, tables[0], tables[2])
 
     return merge_tables(*tables)
 
