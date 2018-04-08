@@ -54,6 +54,7 @@ def convert(sections):
         gen_libs_info(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
+        gen_unknown_section(sections),
     ))
 
 
@@ -71,8 +72,8 @@ def gen_base_info(sections):
     return table.table
 
 
-def hash_data(data):
-    return '%d-%s' % (len(data), md5('data').hexdigest())
+def hash_data(data, hex=False):
+    return '%08x-%s' % (len(data), md5('data').hexdigest())
 
 
 def gen_user_info(sections):
@@ -233,10 +234,24 @@ def gen_class_data(sections):
 
 def gen_libs_info(sections):
     libs = sections['程序段'].Libraries
-    data = [['支持库名称', '文件', '版本', '数字签名']]
+    data = [['支持库名', '文件', '版本', '数字签名']]
     data += [ (lib.Name, lib.FileName, lib.Version, lib.GuidString) for lib in libs]
     return SingleTable(data).table
 
+
+def hex_key(key):
+    v = 0
+    for i in key:
+        v = v * 256 + i
+    return hex(v)
+
+
+def gen_unknown_section(sections):
+    data = [['未知段名', 'Key', 'Flags', '数据签名']]
+    data += [ (s.SectionName if s.SectionName else '(null)', hex_key(s.Key), s.Flags, hash_data(s.Data))
+        for s in filter(lambda s: isinstance(s, SectionInfo), sections.values()) ]
+        
+    return SingleTable(data).table
 
 
 def main(args, argv):
