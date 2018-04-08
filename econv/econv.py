@@ -180,6 +180,7 @@ def gen_class_data(sections):
     epkgs = sections['易包信息段1'].FileNames
 
     methods = dict(map(lambda (i,m): (m.Id, (m, epkgs[i])), enumerate(section.Methods)))
+    classes = dict(map(lambda c: (c.Id, c), section.Classes))
 
     result = ''
     for cls in section.Classes:
@@ -190,7 +191,13 @@ def gen_class_data(sections):
             title = '子程序名'
         else:
             data.append(['类名', '基类', '公开', '备注'])
-            data.append([cls.Name, '', '', cls.Comment])
+            base = classes.get(cls.BaseClass)
+            data.append([
+                cls.Name,
+                base.Name if base else '',
+                '',
+                cls.Comment
+            ])
             title = '方法名'
 
         result += SingleTable(data).table + '\n'
