@@ -51,7 +51,7 @@ def convert(sections):
         gen_base_info(sections),
         gen_user_info(sections),
         gen_global_variable(sections),
-        gen_class_variable(sections),
+        gen_class_data(sections),
     ))
 
 
@@ -132,6 +132,27 @@ def tab(text, n):
     return '\n'.join(map(lambda l: ' '*n+l if l else l, text.split('\n')))
 
 
+def get_local_variable_info(var):
+    return [
+        var.Name,
+        var.TypeName,
+        '  x' if var.Flags else '',
+        ','.join(map(lambda i: str(i), var.UBound)),
+        var.Comment
+    ]
+
+def gen_local_variable(method):
+    variables = method.Variables
+    if len(variables) == 0: return ''
+
+    data = [ get_local_variable_info(var) for var in variables ]
+    data = [['变量名', '类型', '静态', '数组', '备注']] + data
+    
+    table = SingleTable(data)
+    
+    return table.table
+
+
 def gen_method(title, section, cls, methods):
     result = ''
     for idx in cls.Method:
@@ -147,12 +168,14 @@ def gen_method(title, section, cls, methods):
             ]
         ]
         result += SingleTable(data).table + '\n'
+        local_var = gen_local_variable(method)
+        if local_var: result +=  local_var + "\n"
         result += tab(method.Code, 2) + '\n'
 
     return result
 
 
-def gen_class_variable(sections):
+def gen_class_data(sections):
     section = sections['程序段']
     epkgs = sections['易包信息段1'].FileNames
 
