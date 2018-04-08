@@ -82,7 +82,7 @@ def hash_data(*data):
     hash = md5()
     length = 0
     for d in data:
-        d = d if isinstance(d, bytes) else str(d).encode()
+        d = bytes(d)
         length += len(d)
         hash.update(d)
     return '%08x-%s' % (length, hash.hexdigest())
@@ -275,7 +275,7 @@ def gen_form_info(sections):
                 e.Name if e != form.Elements[0] else form.Name,
                 str(e.Left), str(e.Top), str(e.Width), str(e.Height), e.Tag,
                 check(e.Visible, 2), check(e.Disable, 2),
-                hash_data(e.Cursor, e.ExtensionData, e.Children)
+                hash_data(e.Cursor, e.ExtensionData, str([ i for i in e.Children ]))
             ]
             for e in form.Elements
         ]
