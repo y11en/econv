@@ -14,7 +14,6 @@ ERROR_SUCC = 0
 ERROR_ARGV = 1
 ERROR_CONV = 2
 
-LANGUAGES = { 1: '汉语' }
 FILE_TYPES = { 1: '源码', 3: '模块' }
 PROJECT_TYPES = {
     0: 'Windows窗口程序', 1: 'Windows控制台程序', 2: 'Windows动态链接库', 1000: 'Windows易语言模块',
@@ -53,22 +52,16 @@ def convert(sections):
 
 def gen_base_info(sections):
     section = sections['系统信息段']
+    
+    table=SingleTable([
+        [
+            '易语言版本', str(section.ESystemVersion), '格式版本',
+            '%s-%s'%(section.EProjectFormatVersion, section.Language)
+        ],
+        ['  文件类型', FILE_TYPES[section.FileType], '项目类型', PROJECT_TYPES[section.ProjectType]]
+    ], '基本信息')
 
-    tables = [
-        SingleTable([
-            [
-                '易语言版本', str(section.ESystemVersion), '格式版本', section.EProjectFormatVersion,
-                LANGUAGES[section.Language]
-            ]
-        ], '基本信息'),
-        SingleTable([
-            ['  文件类型', FILE_TYPES[section.FileType], '项目类型', PROJECT_TYPES[section.ProjectType]]
-        ]),
-    ]
-
-    adjust_tables(1, *tables)
-
-    return merge_tables(*tables)
+    return table.table
 
 
 def gen_user_info(sections):
@@ -92,14 +85,16 @@ def gen_user_info(sections):
             ['*程序描述', section.Description],
         ]),
         SingleTable([
-            ['[ ]' if section.NotWriteVersion else '[x]', '在编译DLL时允许输出别公开类的公开方法'],
-            ['[x]' if section.ExportPublicClassMethod else '[ ]', '将此程序带星号项同时写入编译后的可执行文件版本信息中']
+            [' [ ]' if section.NotWriteVersion else '[x]', '在编译DLL时允许输出别公开类的公开方法'],
+            [' [x]' if section.ExportPublicClassMethod else '[ ]', '将此程序带星号项同时写入编译后的可执行文件版本信息中']
         ])
     ]
 
     for table in tables:
         table.inner_row_border = True
         table.justify_columns[0] = 'right'
+
+    tables[2].justify_columns[2] = 'right'
 
     adjust_tables(1, tables[0], tables[2])
 
