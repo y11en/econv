@@ -57,6 +57,7 @@ def convert(sections):
         gen_class_data(sections),
         gen_form_info(sections),
         gen_unknown_section(sections),
+        gen_dll_declare(sections),
     ))
 
 
@@ -128,7 +129,7 @@ def gen_user_info(sections):
     return merge_tables(*tables)
 
 
-def get_variable_type(idx):
+def get_type_name(idx):
     if idx == 0x80000101:
         return "字节型"
     elif idx == 0x80000201:
@@ -160,7 +161,7 @@ def get_variable_type(idx):
 def get_global_variable_info(var):
     return [
         var.Name,
-        get_variable_type(var.DataType),
+        get_type_name(var.DataType),
         ','.join(map(lambda i: str(i), var.UBound)),
         check(var.Flags, 2),
         var.Comment
@@ -187,7 +188,7 @@ def tab(text, n):
 def get_local_variable_info(var):
     return [
         var.Name,
-        get_variable_type(var.DataType),
+        get_type_name(var.DataType),
         check(var.Flags, 2),
         ','.join(map(lambda i: str(i), var.UBound)),
         var.Comment
@@ -213,7 +214,7 @@ def gen_method(title, section, cls, methods):
             [title, '返回值类型', '公开', '易包', '备注'],
             [
                 '%s::%s'%(cls.Name,method.Name),
-                get_variable_type(method.ReturnDataType),
+                get_type_name(method.ReturnDataType),
                 check(method.Flags, 2),
                 epkg if epkg else '',
                 method.Comment
@@ -230,7 +231,7 @@ def gen_method(title, section, cls, methods):
 def get_class_variable_info(var):
     return [
         var.Name,
-        get_variable_type(var.DataType),
+        get_type_name(var.DataType),
         ','.join(map(lambda i: str(i), var.UBound)),
         var.Comment
     ]
@@ -320,6 +321,41 @@ def gen_form_info(sections):
         result += merge_tables(body, footer) + '\n'
 
     return result
+
+
+def _gen_dll_declare(declare):
+    tables = [
+        SingleTable([
+            ['Dll命令行', '返回值类型', '公开', '备注'],
+            [
+                declare.Name,
+                get_type_name(declare.ReturnDataType),
+                check(declare.Flags, 2),
+                declare.Comment
+            ],
+        ]),
+        SingleTable([
+            ['库文件名:'],
+            ['  ' + declare.LibraryFile],
+            ['在库中对应命令名:'],
+            ['  ' + declare.Name],
+        ]),
+        SingleTable([['参数名', '类型', '传址', '数组', '备注']])
+    ]
+
+    tables[2].table_data += list(map(
+        lambda p: [p.Name, get_type_name(p.DataType), check(p.Flags, 2), ','.join(p.UBound), p.Comment],
+        declare.Parameters
+    ))
+
+    adjust_tables(0, tables[0], tables[2])
+    adjust_tables(1, tables[0], tables[2])
+    adjust_tables(2, tables[0], tables[2])
+    return merge_tables(*tables)
+
+
+def gen_dll_declare(sections):
+    return '\n'.join(map(_gen_dll_declare, sections['程序段'].DllDeclares))
 
 
 def main(args, argv):
