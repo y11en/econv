@@ -65,7 +65,7 @@ def gen_base_info(sections):
             '%s-%s'%(section.EProjectFormatVersion, section.Language)
         ],
         ['  文件类型', FILE_TYPES[section.FileType], '项目类型', PROJECT_TYPES[section.ProjectType]]
-    ], '基本信息')
+    ])
 
     return table.table
 
@@ -76,7 +76,7 @@ def gen_user_info(sections):
     tables = [
         SingleTable([
             ['*程序名称', section.Name, '*程序版本', str(section.Version)]
-        ], '用户信息'),
+        ]),
         SingleTable([
             [' 编译插件', section.CompilePlugins]
         ]),
