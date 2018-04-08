@@ -78,20 +78,20 @@ typedef DATE*	PDATE;
     可能为非数组的系统数据类型或窗口组件、菜单数据类型。*/
 #define		_SDT_ALL		MAKELONG (MAKEWORD (0, 0), 0x8000)	// （内部使用）
 // 数值，匹配所有类型数字，仅用于库命令定义其参数及返回值的数据类型。
-//#define		_SDT_NUM		MAKELONG (MAKEWORD (1, 0), 0x8000)	// （内部使用），3.0版本中已经废弃。
+//#define		_SDT_NUM		MAKELONG (MAKEWORD (1, 0), 0x8000)		// （内部使用），3.0版本中已经废弃。
 	#define		SDT_BYTE		MAKELONG (MAKEWORD (1, 1), 0x8000)		// 字节
 	#define		SDT_SHORT		MAKELONG (MAKEWORD (1, 2), 0x8000)		// 短整数
 	#define		SDT_INT			MAKELONG (MAKEWORD (1, 3), 0x8000)		// 整数
 	#define		SDT_INT64		MAKELONG (MAKEWORD (1, 4), 0x8000)		// 长整数
 	#define		SDT_FLOAT		MAKELONG (MAKEWORD (1, 5), 0x8000)		// 小数
 	#define		SDT_DOUBLE		MAKELONG (MAKEWORD (1, 6), 0x8000)		// 双精度小数
-#define		SDT_BOOL		MAKELONG (MAKEWORD (2, 0),	0x8000)		// 逻辑
-#define		SDT_DATE_TIME	MAKELONG (MAKEWORD (3, 0),	0x8000)		// 日期时间
-#define		SDT_TEXT		MAKELONG (MAKEWORD (4, 0),	0x8000)		// 文本
-#define		SDT_BIN			MAKELONG (MAKEWORD (5, 0),	0x8000)		// 字节集
-#define		SDT_SUB_PTR		MAKELONG (MAKEWORD (6, 0),	0x8000)		// 子程序指针
-//#define		_SDT_VAR_REF	MAKELONG (MAKEWORD (7, 0),	0x8000)		// 参考，3.0版本中已经废弃。
-#define		SDT_STATMENT	MAKELONG (MAKEWORD (8, 0),	0x8000)
+	#define		SDT_BOOL		MAKELONG (MAKEWORD (2, 0), 0x8000)		// 逻辑
+	#define		SDT_DATE_TIME	MAKELONG (MAKEWORD (3, 0), 0x8000)		// 日期时间
+	#define		SDT_TEXT		MAKELONG (MAKEWORD (4, 0), 0x8000)		// 文本
+	#define		SDT_BIN			MAKELONG (MAKEWORD (5, 0), 0x8000)		// 字节集
+	#define		SDT_SUB_PTR		MAKELONG (MAKEWORD (6, 0), 0x8000)		// 子程序指针
+//#define		_SDT_VAR_REF	MAKELONG (MAKEWORD (7, 0), 0x8000)		// 参考，3.0版本中已经废弃。
+	#define		SDT_STATMENT	MAKELONG (MAKEWORD (8, 0), 0x8000)
 	// 子语句型，仅用于库命令定义其参数的数据类型。其数据长度为两个INT，
 	// 第一个记录存根子程序地址，第二个记录该子语句所在子程序的变量栈首。
     // !!! 注意在用作库命令参数时，编译器允许其可以接收所有基本数据类型，所以必须首先判断处理
