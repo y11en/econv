@@ -50,6 +50,7 @@ def convert(sections):
     return '\n'.join((
         gen_base_info(sections),
         gen_user_info(sections),
+        gen_libs_info(sections),
         gen_global_variable(sections),
         gen_class_data(sections),
     ))
@@ -219,6 +220,14 @@ def gen_class_data(sections):
         result += gen_method(title, section, cls, methods) + '\n'
 
     return result
+
+
+def gen_libs_info(sections):
+    libs = sections['程序段'].Libraries
+    data = [['支持库名称', '文件', '版本', '数字签名']]
+    data += [ (lib.Name, lib.FileName, lib.Version, lib.GuidString) for lib in libs]
+    return SingleTable(data).table
+
 
 
 def main(args, argv):
