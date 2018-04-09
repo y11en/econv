@@ -32,6 +32,7 @@ def load(filename, password):
                 '程序段': CodeSectionInfo.Parse,
                 '易包信息段1': EPackageInfo.Parse,
                 '程序资源段': ResourceSectionInfo.Parse,
+                '辅助信息段2': PublicClassesInfo.Parse,
             }
 
             sections = OrderedDict()
@@ -261,6 +262,7 @@ def get_class_variable_info(var):
 def gen_class_data(sections):
     section = sections['程序段']
     epkgs = sections['易包信息段1'].FileNames
+    public_classes = sections['辅助信息段2'].Classes
 
     methods = dict(map(lambda (i,m): (m.Id, (m, epkgs[i])), enumerate(section.Methods)))
     classes = dict(map(lambda c: (c.Id, c), section.Classes))
@@ -281,7 +283,7 @@ def gen_class_data(sections):
             data.append([
                 cls.Name,
                 base.Name if base else '',
-                '',
+                check(public_classes.Contains(cls.Id), 2),
                 cls.Comment
             ])
             if cls.Variables:
